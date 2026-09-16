@@ -1,0 +1,21 @@
+name: VM3 RepoId CrossAccount Treatment
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      MERGIFY_TOKEN: ${{ secrets.VM3_REPOID_B_TOKEN }}
+      MERGIFY_TEST_JOB_NAME: vm3-repoid-xacct-ba4c53
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install integration
+        run: pip install pytest-mergify==2026.9.11.2 pytest
+      - name: Run controlled cross-account repo-id treatment
+        run: pytest -q -s "vm3-repoid-xacct-ba4c53/test_probe.py"
